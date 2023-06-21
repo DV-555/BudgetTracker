@@ -15,7 +15,7 @@ public class Main {
       System.out.println("2. Внести доходы ");
       System.out.println("3. Внести затраты ");
       System.out.println("4. Выход из программы");
-      System.out.println("Выберите действие: " + "\n");
+      System.out.println("Выберите действие: " );
       int choice = scanner.nextInt();
       try {
         switch (choice) {
@@ -29,7 +29,7 @@ public class Main {
             BudgeTracker.addExpense();
             break;
           case 4:
-            System.out.println("Выход из программы"+"\n");
+            System.out.print("Выход из программы");
             running = false;
             break;
           default:

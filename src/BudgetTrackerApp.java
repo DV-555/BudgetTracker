@@ -1,7 +1,3 @@
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Scanner;
@@ -27,7 +23,31 @@ public class BudgetTrackerApp {
       System.out.println("3. Вывести статистику на экран");
       System.out.println("4. Выход");
       System.out.println("Выберите действие:" + "\n");
+      int choice = scanner.nextInt();
+      scanner.nextLine(); // Считываем перевод строки после ввода числа
 
+      switch (choice) {
+        case 1:
+          //addExpense(scanner);
+          break;
+        case 2:
+          // deleteExpense();
+          break;
+        case 3:
+          // printStatistics();
+          break;
+        case 4:
+          System.out.println("Выход из программы ");
+          runner = false;
+          break;
+        default:
+          System.out.println("Не верный ввод. Попробуйте снова.");
+      }
     }
   }
+  // Объект Scanner, для считывания ввода пользователя с консоли. Затем в бесконечном цикле
+  // выводится меню с возможными действиями: добавить расход, удалить расход,
+  // вывести статистику или выйти из программы. В зависимости от выбора пользователя
+  // вызывается соответствующий метод.
+
 }

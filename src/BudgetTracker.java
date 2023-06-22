@@ -18,7 +18,6 @@ public class BudgetTracker {
   private static final String FILE_PATH = "res/budget.txt";
   private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
   public static Scanner scanner = new Scanner(System.in);
-  private static Exception DateTimeException;
 
   public static void main(String[] args) {
     Date current = new Date();

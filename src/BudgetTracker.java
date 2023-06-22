@@ -17,36 +17,40 @@ public class BudgetTracker {
   private static final String FILE_PATH = "res/budget.txt";
   private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
-  public static void main(String[] args) {
-    Scanner scanner = new Scanner(System.in);
+  public static Scanner SCANNER = new Scanner(System.in);
 
+  public static void main(String[] args) {
+    Date current = new Date();
+    System.out.println("\n" + "\n" + "... Сегодня " + current + " ...");
+
+    startOption();
+
+  }
+
+  public static void startOption() {
+    System.out.println("---------------------------------------------");
+    System.out.println("               Budget Tracker                ");
+    System.out.println("---------------------------------------------" + "\n");
     boolean runner = true;
     while (runner) {
-      Date current = new Date();
-      System.out.println("\n" + "\n" + "... Сегодня " + current + " ...");
-      System.out.println("---------------------------------------------");
-      System.out.println("               Budget Tracker                ");
-      System.out.println("---------------------------------------------"+"\n");
-
       System.out.println("1. Добавить расходы");
       System.out.println("2. Удалить расходы");
       System.out.println("3. Вывести статистику на экран");
-      System.out.println("4. Выход"+"\n");
+      System.out.println("4. Выход" + "\n");
       System.out.println("Выберите действие:" + "\n");
-      int choice = scanner.nextInt();
-      scanner.nextLine(); // Считываем перевод строки после ввода числа
 
+      String choice = SCANNER.nextLine();
       switch (choice) {
-        case 1:
-          addExpense(scanner);
+        case "1":
+          addExpense(SCANNER);
           break;
-        case 2:
-          deleteExpense(scanner);
+        case "2":
+          deleteExpense(SCANNER);
           break;
-        case 3:
-          printStatistics(scanner);
+        case "3":
+          printStatistics(SCANNER);
           break;
-        case 4:
+        case "4":
           System.out.println("Выход из программы ");
           runner = false;
           break;
@@ -61,6 +65,7 @@ public class BudgetTracker {
   // вызывается соответствующий метод.
 
   private static void addExpense(Scanner scanner) {
+    List<String> list = new ArrayList<>();
     System.out.println("Введите дату расходов в формате dd.mm.yyyy :");
     String dateInput = scanner.nextLine();
     LocalDate expenseDate = LocalDate.parse(dateInput, DATE_FORMATTER);
@@ -74,7 +79,8 @@ public class BudgetTracker {
     scanner.nextLine(); // Считываем перевод строки после ввода числа
 
     String expense = expenseDate.format(DATE_FORMATTER) + "," + category + "," + amount;
-
+    list.add(expense);
+    System.out.println(expense);
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH, true))) {
       writer.write(expense);
       writer.newLine();
@@ -123,91 +129,96 @@ public class BudgetTracker {
 // budget.txt и фильтрует их, исключая расходы с указанной датой и категорией.
 // Обновленный список расходов записывается обратно в файл.
 
-private static void printStatistics(Scanner scanner) {
-  System.out.println("Выберите период:");
-  System.out.println("1. За сегодняшний день");
-  System.out.println("2. За прошедшую неделю");
-  System.out.println("3. За прошедший месяц");
-  System.out.println("4. За все время");
+  private static void printStatistics(Scanner scanner) {
+    String choice;
+    do {
+      System.out.println("Выберите период:");
+      System.out.println("1. За сегодняшний день");
+      System.out.println("2. За прошедшую неделю");
+      System.out.println("3. За прошедший месяц");
+      System.out.println("4. За все время");
+      System.out.println("0. Выйти в начальное меню");
+      choice = scanner.nextLine();
 
-  int choice = scanner.nextInt();
-  scanner.nextLine(); // Перевод строки после ввода числа
+      LocalDate startDate = null;
+      LocalDate endDate = LocalDate.now();
 
-  LocalDate startDate;
-  LocalDate endDate = LocalDate.now();
-
-  switch (choice) {
-    case 1:
-      startDate = endDate;
-      break;
-    case 2:
-      startDate = endDate.minusWeeks(1);
-      break;
-    case 3:
-      startDate = endDate.minusMonths(1);
-      break;
-    case 4:
-      startDate = null; // Если startDate равно null, то учитываются все записи
-      break;
-    default:
-      System.out.println("Неверный выбор. Вывод статистики отменен.");
-      return;
-  }
-
-  try {
-    List<String> expenses = Files.readAllLines(Path.of(FILE_PATH));
-
-    Map<String, Double> categoryExpenses = new HashMap<>();
-    Map<String, List<String>> categoryDates = new HashMap<>();
-
-    for (String expense : expenses) {
-      String[] parts = expense.split(",");
-      LocalDate expenseDate = LocalDate.parse(parts[0], DATE_FORMATTER);
-      String category = parts[1];
-      double amount = Double.parseDouble(parts[2]);
-
-      if ((startDate == null || expenseDate.isEqual(startDate) || expenseDate.isAfter(startDate))
-          && (expenseDate.isEqual(endDate) || expenseDate.isBefore(endDate))) {
-        categoryExpenses.put(category, categoryExpenses.getOrDefault(category, 0.0) + amount);
-
-        String formattedDate = expenseDate.format(DATE_FORMATTER);
-        String expenseDetails = "Дата: " + formattedDate + ", Сумма: " + amount;
-        List<String> categoryExpensesList = categoryDates.getOrDefault(category, new ArrayList<>());
-        categoryExpensesList.add(expenseDetails);
-        categoryDates.put(category, categoryExpensesList);
+      switch (choice) {
+        case "1":
+          startDate = endDate;
+          break;
+        case "2":
+          startDate = endDate.minusWeeks(1);
+          break;
+        case "3":
+          startDate = endDate.minusMonths(1);
+          break;
+        case "4":
+          startDate = null; // Если startDate равно null, то учитываются все записи
+        case "0":
+          startOption();
+          break;
+        default:
+          System.out.println("Неверный выбор. Вывод статистики отменен.");
+          return;
       }
-    }
-    System.out.println("\n" + "Статистика расходов по категориям:");
-    for (Map.Entry<String, Double> entry : categoryExpenses.entrySet()) {
-      String category = entry.getKey();
-      double totalAmount = entry.getValue();
-      System.out.println("- - - - - - - - - - - - - - - - - - - - - - -");
-      System.out.println("Категория: " + category + ", Сумма: " + totalAmount);
-      System.out.println("- - - - - - - - - - - - - - - - - - - - - - -");
 
-      List<String> expensesList = categoryDates.get(category);
-      if (expensesList != null) {
-        System.out.println("Расходы по категории " + category + ":");
-        for (String expenseDetails : expensesList) {
-          System.out.println(expenseDetails);
+      try {
+        List<String> expenses = Files.readAllLines(Path.of(FILE_PATH));
+
+        Map<String, Double> categoryExpenses = new HashMap<>();
+        Map<String, List<String>> categoryDates = new HashMap<>();
+
+        for (String expense : expenses) {
+          String[] parts = expense.split(",");
+          LocalDate expenseDate = LocalDate.parse(parts[0], DATE_FORMATTER);
+          String category = parts[1];
+          double amount = Double.parseDouble(parts[2]);
+
+          if ((startDate == null || expenseDate.isEqual(startDate) || expenseDate.isAfter(
+              startDate))
+              && (expenseDate.isEqual(endDate) || expenseDate.isBefore(endDate))) {
+            categoryExpenses.put(category, categoryExpenses.getOrDefault(category, 0.0) + amount);
+
+            String formattedDate = expenseDate.format(DATE_FORMATTER);
+            String expenseDetails = "Дата: " + formattedDate + ", Сумма: " + amount;
+            List<String> categoryExpensesList = categoryDates.getOrDefault(category,
+                new ArrayList<>());
+            categoryExpensesList.add(expenseDetails);
+            categoryDates.put(category, categoryExpensesList);
+          }
         }
+        System.out.println("\n" + "Статистика расходов по категориям:");
+        for (Map.Entry<String, Double> entry : categoryExpenses.entrySet()) {
+          String category = entry.getKey();
+          double totalAmount = entry.getValue();
+          System.out.println("- - - - - - - - - - - - - - - - - - - - - - -");
+          System.out.println("Категория: " + category + ", Сумма: " + totalAmount);
+          System.out.println("- - - - - - - - - - - - - - - - - - - - - - -");
+
+          List<String> expensesList = categoryDates.get(category);
+          if (expensesList != null) {
+            System.out.println("Расходы по категории " + category + ":");
+            for (String expenseDetails : expensesList) {
+              System.out.println(expenseDetails);
+            }
+          }
+        }
+
+        double totalAmount = categoryExpenses.values().stream()
+            .mapToDouble(Double::doubleValue)
+            .sum();
+        System.out.println("- - - - - - - - - - - - - - - - - - - - - - -");
+        System.out.println("Общая сумма расходов: " + totalAmount);
+      } catch (IOException e) {
+        System.out.println("Ошибка при чтении файла: " + e.getMessage());
       }
-    }
-
-    double totalAmount = categoryExpenses.values().stream()
-        .mapToDouble(Double::doubleValue)
-        .sum();
-    System.out.println("- - - - - - - - - - - - - - - - - - - - - - -");
-    System.out.println("Общая сумма расходов: " + totalAmount);
-  } catch (IOException e) {
-    System.out.println("Ошибка при чтении файла: " + e.getMessage());
-  }
-}
-
+    } while (!choice.equals("0"));
 //Метод printStatistics выводит статистику расходов по категориям.
 // Сначала он запрашивает у пользователя период, за который нужно вывести статистику.
 // Затем он читает все расходы из файла budget.txt и фильтрует их, используя выбранный период.
 // Далее происходит подсчет сумм расходов по категориям и формирование списка расходов
 // по категориям с указанием даты и суммы. Наконец, выводится статистика по категориям,
 // расходы по каждой категории и общая сумма расходов.
+  }
 }

@@ -79,12 +79,12 @@ public class BudgetTracker {
       try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH, true))) {
         writer.write(expense);
         writer.newLine();
-        System.out.println("Расход успешно добавлен.");
+        System.out.println("Расход успешно добавлен."+"\n");
       } catch (IOException e) {
         System.out.println("Ошибка при записи в файл: " + e.getMessage());
       }
     } catch (DateTimeParseException d) {
-      System.out.println("Ошибка при записи"+"\n");
+      System.out.println("Ошибка ввода, попробуйте ещё раз "+"\n");
     }
   }
 //Метод addExpense предназначен для добавления нового расхода.
@@ -145,15 +145,15 @@ public class BudgetTracker {
         switch (choice) {
           case "1" -> startDate = endDate;
           case "2" -> {
-            System.out.println("Расходы за прошедшую неделю ");
+            System.out.println("******** Расходы за прошедшую неделю ********");
             startDate = endDate.minusWeeks(1);
           }
           case "3" -> {
-            System.out.println("Расходы за прошедший месяц");
+            System.out.println("******* Расходы за прошедший месяц **********");
             startDate = endDate.minusMonths(1);
           }
           case "4" -> {
-            System.out.println("Общие расходы ");
+            System.out.println("************* Общие расходы *****************");
             startDate = null; // Если startDate равно null, то учитываются все записи
           }
           case "0" -> startOption();

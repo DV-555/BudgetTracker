@@ -18,6 +18,7 @@ public class BudgetTracker {
   private static final String FILE_PATH = "res/budget.txt";
   private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
   public static Scanner scanner = new Scanner(System.in);
+  private static Exception DateTimeException;
 
   public static void main(String[] args) {
     Date current = new Date();
@@ -121,6 +122,8 @@ public class BudgetTracker {
         System.out.println("Расход успешно удален.");
       } catch (IOException e) {
         System.out.println("Ошибка при чтении/записи файла: " + e.getMessage());
+      }catch (DateTimeParseException d){
+        System.out.println("Ошибка ввода, попробуйте ещё раз "+"\n");
       }
     }
 //Метод deleteExpense предназначен для удаления расходов. Он запрашивает у пользователя

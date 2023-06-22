@@ -1,3 +1,7 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Scanner;
@@ -28,7 +32,7 @@ public class BudgetTrackerApp {
 
       switch (choice) {
         case 1:
-          //addExpense(scanner);
+         addExpense(scanner);
           break;
         case 2:
           // deleteExpense();
@@ -49,5 +53,35 @@ public class BudgetTrackerApp {
   // выводится меню с возможными действиями: добавить расход, удалить расход,
   // вывести статистику или выйти из программы. В зависимости от выбора пользователя
   // вызывается соответствующий метод.
+
+  private static void addExpense(Scanner scanner) {
+    System.out.println("Введите дату расходов в формате dd.mm.yyyy :");
+    String dateInput = scanner.nextLine();
+    LocalDate expenseDate = LocalDate.parse(dateInput, DATE_FORMATTER);
+
+    System.out.println("Введите категорию расхода: "
+        + "Food, Car, Housekeeping, Health, Clothes, Fun :");
+    String category = scanner.nextLine();
+
+    System.out.println("Введите сумму расхода:");
+    double amount = scanner.nextDouble();
+    scanner.nextLine(); // Считываем перевод строки после ввода числа
+
+    String expense = expenseDate.format(DATE_FORMATTER) + "," + category + "," + amount;
+
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH, true))) {
+      writer.write(expense);
+      writer.newLine();
+      System.out.println("Расход успешно добавлен.");
+    } catch (IOException e) {
+      System.out.println("Ошибка при записи в файл: " + e.getMessage());
+    }
+  }
+//Метод addExpense предназначен для добавления нового расхода.
+// Он запрашивает у пользователя дату расхода, категорию и сумму.
+// Затем формируется строка expense, содержащая дату, категорию и сумму,
+// разделенные запятыми. Далее эта строка записывается в файл budget.txt
+// с помощью объекта BufferedWriter.
+
 
 }

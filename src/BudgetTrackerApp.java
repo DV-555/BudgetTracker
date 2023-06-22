@@ -23,15 +23,15 @@ public class BudgetTrackerApp {
     boolean runner = true;
     while (runner) {
       Date current = new Date();
-      System.out.println("\n" + "... Сегодня " + current + " ...");
+      System.out.println("\n" + "\n" + "... Сегодня " + current + " ...");
       System.out.println("---------------------------------------------");
       System.out.println("               Budget Tracker                ");
-      System.out.println("---------------------------------------------");
+      System.out.println("---------------------------------------------"+"\n");
 
       System.out.println("1. Добавить расходы");
       System.out.println("2. Удалить расходы");
       System.out.println("3. Вывести статистику на экран");
-      System.out.println("4. Выход");
+      System.out.println("4. Выход"+"\n");
       System.out.println("Выберите действие:" + "\n");
       int choice = scanner.nextInt();
       scanner.nextLine(); // Считываем перевод строки после ввода числа
@@ -131,7 +131,7 @@ private static void printStatistics(Scanner scanner) {
   System.out.println("4. За все время");
 
   int choice = scanner.nextInt();
-  scanner.nextLine(); // Считываем перевод строки после ввода числа
+  scanner.nextLine(); // Перевод строки после ввода числа
 
   LocalDate startDate;
   LocalDate endDate = LocalDate.now();
@@ -147,7 +147,7 @@ private static void printStatistics(Scanner scanner) {
       startDate = endDate.minusMonths(1);
       break;
     case 4:
-      startDate = null; // Если startDate равно null, будут учитываться все записи
+      startDate = null; // Если startDate равно null, то учитываются все записи
       break;
     default:
       System.out.println("Неверный выбор. Вывод статистики отменен.");
@@ -177,13 +177,13 @@ private static void printStatistics(Scanner scanner) {
         categoryDates.put(category, categoryExpensesList);
       }
     }
-
-    System.out.println("Статистика расходов по категориям:");
-
+    System.out.println("\n" + "Статистика расходов по категориям:");
     for (Map.Entry<String, Double> entry : categoryExpenses.entrySet()) {
       String category = entry.getKey();
       double totalAmount = entry.getValue();
+      System.out.println("- - - - - - - - - - - - - - - - - - - - - - -");
       System.out.println("Категория: " + category + ", Сумма: " + totalAmount);
+      System.out.println("- - - - - - - - - - - - - - - - - - - - - - -");
 
       List<String> expensesList = categoryDates.get(category);
       if (expensesList != null) {
@@ -197,6 +197,7 @@ private static void printStatistics(Scanner scanner) {
     double totalAmount = categoryExpenses.values().stream()
         .mapToDouble(Double::doubleValue)
         .sum();
+    System.out.println("- - - - - - - - - - - - - - - - - - - - - - -");
     System.out.println("Общая сумма расходов: " + totalAmount);
   } catch (IOException e) {
     System.out.println("Ошибка при чтении файла: " + e.getMessage());

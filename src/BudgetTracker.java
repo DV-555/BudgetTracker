@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-public class BudgetTrackerApp {
+public class BudgetTracker {
 
   private static final String FILE_PATH = "res/budget.txt";
   private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
